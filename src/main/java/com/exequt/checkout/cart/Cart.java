@@ -54,4 +54,10 @@ public class Cart {
         item.setPrice(price);
         items.add(item);
     }
+
+    public BigDecimal calculateTotal() {
+        return items.stream()
+            .map(i -> i.getPrice().multiply(BigDecimal.valueOf(i.getQuantity())))
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }

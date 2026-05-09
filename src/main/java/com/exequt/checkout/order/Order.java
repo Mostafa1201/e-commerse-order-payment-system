@@ -44,15 +44,10 @@ public class Order {
     private Long version;
 
     public UUID getId() { return id; }
-
     public UUID getCartId() { return cartId; }
-
     public OrderStatus getStatus() { return status; }
-
     public BigDecimal getTotalAmount() { return totalAmount; }
-
     public Instant getCreatedAt() { return createdAt; }
-
     public Instant getUpdatedAt() { return updatedAt; }
 
     // Static Factory for order creation
