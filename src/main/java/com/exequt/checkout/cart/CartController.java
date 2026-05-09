@@ -1,5 +1,7 @@
 package com.exequt.checkout.cart;
 
+import com.exequt.checkout.order.OrderDtos;
+import com.exequt.checkout.order.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +18,10 @@ import java.util.UUID;
 @RequestMapping("/carts")
 public class CartController {
     private final CartService cartService;
-
-    public CartController(CartService cartService) {
+    private final OrderService orderService;
+    public CartController(CartService cartService, OrderService orderService) {
         this.cartService = cartService;
+        this.orderService = orderService;
     }
 
     @PostMapping
@@ -38,5 +41,10 @@ public class CartController {
         @Valid @RequestBody CartDtos.AddItemRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(cartService.addItem(cartId, request));
+    }
+
+    @PostMapping("/{cartId}/checkout")
+    public ResponseEntity<OrderDtos.OrderResponse> checkout(@PathVariable UUID cartId) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.checkout(cartId));
     }
 }

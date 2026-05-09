@@ -60,4 +60,13 @@ public class Cart {
             .map(i -> i.getPrice().multiply(BigDecimal.valueOf(i.getQuantity())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+
+    public boolean isOpen() { return status == CartStatus.OPEN; }
+
+    public void checkout() {
+        if (status != CartStatus.OPEN) {
+            throw new IllegalStateTransitionException("Cart is already " + status);
+        }
+        this.status = CartStatus.CHECKED_OUT;
+    }
 }
