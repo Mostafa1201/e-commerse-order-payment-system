@@ -1,5 +1,6 @@
 package com.exequt.checkout.order;
 
+import com.exequt.checkout.exception.IllegalStateTransitionException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -57,6 +58,36 @@ public class Order {
         order.totalAmount = totalAmount;
         order.status = OrderStatus.CREATED;
         return order;
+    }
+
+    public void startPayment() {
+        if (status != OrderStatus.CREATED && status != OrderStatus.PAYMENT_FAILED) {
+            throw new IllegalStateTransitionException(
+                "Cannot start payment from state [" + status + "]. " +
+                    "Allowed: CREATED, PAYMENT_FAILED");
+        }
+        this.status = OrderStatus.PENDING_PAYMENT;
+        this.updatedAt = Instant.now();
+    }
+
+    public void markPaid() {
+        if (status != OrderStatus.PENDING_PAYMENT) {
+            throw new IllegalStateTransitionException(
+                "Cannot mark PAID from state [" + status + "]. " +
+                    "Allowed: PENDING_PAYMENT");
+        }
+        this.status = OrderStatus.PAID;
+        this.updatedAt = Instant.now();
+    }
+
+    public void markFailed() {
+        if (status != OrderStatus.PENDING_PAYMENT) {
+            throw new IllegalStateTransitionException(
+                "Cannot mark PAYMENT_FAILED from state [" + status + "]. " +
+                    "Allowed: PENDING_PAYMENT");
+        }
+        this.status = OrderStatus.PAYMENT_FAILED;
+        this.updatedAt = Instant.now();
     }
 
     public boolean isPaid() { return status == OrderStatus.PAID; }
