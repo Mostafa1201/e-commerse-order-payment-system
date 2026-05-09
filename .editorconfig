@@ -25,3 +25,4 @@ ij_java_align_multiline_parameters = false
 ij_java_align_multiline_chained_methods = false
 ij_java_spaces_within_braces = true
 ij_java_keep_simple_methods_in_one_line = true
+ij_java_blank_lines_around_method = 0
