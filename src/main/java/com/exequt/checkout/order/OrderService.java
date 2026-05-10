@@ -4,15 +4,15 @@ import com.exequt.checkout.cart.Cart;
 import com.exequt.checkout.cart.CartRepository;
 import com.exequt.checkout.exception.ConflictException;
 import com.exequt.checkout.exception.NotFoundException;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
-
 @Service
 public class OrderService {
+
     private static final Logger log = LoggerFactory.getLogger(OrderService.class);
     private final CartRepository cartRepository;
     private final OrderRepository orderRepository;
@@ -24,7 +24,7 @@ public class OrderService {
 
     public Order findOrderOrThrow(UUID orderId) {
         return orderRepository.findById(orderId)
-            .orElseThrow(() -> new NotFoundException("Order not found: " + orderId));
+                .orElseThrow(() -> new NotFoundException("Order not found: " + orderId));
     }
 
     public OrderDtos.OrderResponse getOrder(UUID orderId) {
@@ -34,7 +34,7 @@ public class OrderService {
     @Transactional
     public OrderDtos.OrderResponse checkout(UUID cartId) {
         Cart cart = cartRepository.findById(cartId)
-            .orElseThrow(() -> new NotFoundException("Cart not found: " + cartId));
+                .orElseThrow(() -> new NotFoundException("Cart not found: " + cartId));
         if (!cart.isOpen()) {
             throw new ConflictException("Cart " + cartId + " is already checked out");
         }
@@ -46,7 +46,8 @@ public class OrderService {
         Order order = Order.createFromCart(cartId, cart.calculateTotal());
         Order saved = orderRepository.save(order);
 
-        log.info("Checkout complete. Cart={} -> Order={} total={}", cartId, saved.getId(), saved.getTotalAmount());
+        log.info("Checkout complete. Cart={} -> Order={} total={}", cartId, saved.getId(),
+                saved.getTotalAmount());
         return OrderDtos.OrderResponse.from(saved);
     }
 }

@@ -10,15 +10,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
-import org.hibernate.annotations.CreationTimestamp;
-
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "orders")
 public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -44,10 +44,15 @@ public class Order {
     private Long version;
 
     public UUID getId() { return id; }
+
     public UUID getCartId() { return cartId; }
+
     public OrderStatus getStatus() { return status; }
+
     public BigDecimal getTotalAmount() { return totalAmount; }
+
     public Instant getCreatedAt() { return createdAt; }
+
     public Instant getUpdatedAt() { return updatedAt; }
 
     // Static Factory for order creation
@@ -63,8 +68,8 @@ public class Order {
     public void startPayment() {
         if (status != OrderStatus.CREATED && status != OrderStatus.PAYMENT_FAILED) {
             throw new IllegalStateTransitionException(
-                "Cannot start payment from state [" + status + "]. " +
-                    "Allowed: CREATED, PAYMENT_FAILED");
+                    "Cannot start payment from state [" + status + "]. " +
+                            "Allowed: CREATED, PAYMENT_FAILED");
         }
         this.status = OrderStatus.PENDING_PAYMENT;
         this.updatedAt = Instant.now();
@@ -73,8 +78,8 @@ public class Order {
     public void markPaid() {
         if (status != OrderStatus.PENDING_PAYMENT) {
             throw new IllegalStateTransitionException(
-                "Cannot mark PAID from state [" + status + "]. " +
-                    "Allowed: PENDING_PAYMENT");
+                    "Cannot mark PAID from state [" + status + "]. " +
+                            "Allowed: PENDING_PAYMENT");
         }
         this.status = OrderStatus.PAID;
         this.updatedAt = Instant.now();
@@ -83,8 +88,8 @@ public class Order {
     public void markFailed() {
         if (status != OrderStatus.PENDING_PAYMENT) {
             throw new IllegalStateTransitionException(
-                "Cannot mark PAYMENT_FAILED from state [" + status + "]. " +
-                    "Allowed: PENDING_PAYMENT");
+                    "Cannot mark PAYMENT_FAILED from state [" + status + "]. " +
+                            "Allowed: PENDING_PAYMENT");
         }
         this.status = OrderStatus.PAYMENT_FAILED;
         this.updatedAt = Instant.now();

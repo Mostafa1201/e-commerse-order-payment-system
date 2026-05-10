@@ -3,6 +3,7 @@ package com.exequt.checkout.cart;
 import com.exequt.checkout.order.OrderDtos;
 import com.exequt.checkout.order.OrderService;
 import jakarta.validation.Valid;
+import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,13 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/carts")
 public class CartController {
+
     private final CartService cartService;
     private final OrderService orderService;
+
     public CartController(CartService cartService, OrderService orderService) {
         this.cartService = cartService;
         this.orderService = orderService;
@@ -27,7 +28,7 @@ public class CartController {
     @PostMapping
     public ResponseEntity<CartDtos.CartResponse> createCart() {
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(cartService.createCart());
+                .body(cartService.createCart());
     }
 
     @GetMapping("/{cartId}")
@@ -37,10 +38,10 @@ public class CartController {
 
     @PostMapping("/{cartId}/items")
     public ResponseEntity<CartDtos.CartResponse> addItem(
-        @PathVariable UUID cartId,
-        @Valid @RequestBody CartDtos.AddItemRequest request) {
+            @PathVariable UUID cartId,
+            @Valid @RequestBody CartDtos.AddItemRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(cartService.addItem(cartId, request));
+                .body(cartService.addItem(cartId, request));
     }
 
     @PostMapping("/{cartId}/checkout")

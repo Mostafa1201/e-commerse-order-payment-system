@@ -10,17 +10,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import org.hibernate.annotations.CreationTimestamp;
-
 import java.time.Instant;
 import java.util.UUID;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "payment_attempts",
-    indexes = @Index(name = "idx_external_payment_id", columnList = "externalPaymentId"),
-    uniqueConstraints = @UniqueConstraint(name = "uk_external_payment_id",
-        columnNames = "externalPaymentId"))
+        indexes = @Index(name = "idx_external_payment_id", columnList = "externalPaymentId"),
+        uniqueConstraints = @UniqueConstraint(name = "uk_external_payment_id",
+                columnNames = "externalPaymentId"))
 public class PaymentAttempt {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -42,10 +42,15 @@ public class PaymentAttempt {
     private Instant processedAt;
 
     public UUID getId() { return id; }
+
     public UUID getOrderId() { return orderId; }
+
     public String getExternalPaymentId() { return externalPaymentId; }
+
     public PaymentAttemptStatus getStatus() { return status; }
+
     public Instant getCreatedAt() { return createdAt; }
+
     public Instant getProcessedAt() { return processedAt; }
 
     public static PaymentAttempt create(UUID orderId, String externalPaymentId) {
@@ -68,6 +73,6 @@ public class PaymentAttempt {
 
     public boolean isAlreadyProcessed() {
         return status == PaymentAttemptStatus.CONFIRMED
-            || status == PaymentAttemptStatus.FAILED;
+                || status == PaymentAttemptStatus.FAILED;
     }
 }

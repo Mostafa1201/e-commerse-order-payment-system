@@ -11,17 +11,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import org.hibernate.annotations.CreationTimestamp;
-
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "carts")
 public class Cart {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -38,14 +38,17 @@ public class Cart {
     private List<CartItem> items = new ArrayList<>();
 
     public UUID getId() { return id; }
+
     public CartStatus getStatus() { return status; }
+
     public Instant getCreatedAt() { return createdAt; }
+
     public List<CartItem> getItems() { return items; }
 
     public void addItem(String productId, int quantity, BigDecimal price) {
         if (status != CartStatus.OPEN) {
             throw new IllegalStateTransitionException(
-                "Cannot add items to a cart that is " + status);
+                    "Cannot add items to a cart that is " + status);
         }
         CartItem item = new CartItem();
         item.setCart(this);
@@ -57,8 +60,8 @@ public class Cart {
 
     public BigDecimal calculateTotal() {
         return items.stream()
-            .map(i -> i.getPrice().multiply(BigDecimal.valueOf(i.getQuantity())))
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .map(i -> i.getPrice().multiply(BigDecimal.valueOf(i.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public boolean isOpen() { return status == CartStatus.OPEN; }

@@ -16,6 +16,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "cart_items")
 public class CartItem {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -34,13 +35,20 @@ public class CartItem {
     private BigDecimal price;
 
     public UUID getId() { return id; }
+
     public Cart getCart() { return cart; }
+
     public String getProductId() { return productId; }
+
     public int getQuantity() { return quantity; }
+
     public BigDecimal getPrice() { return price; }
 
     public void setCart(Cart cart) { this.cart = cart; }
+
     public void setProductId(String productId) { this.productId = productId; }
+
     public void setQuantity(int quantity) { this.quantity = quantity; }
+
     public void setPrice(BigDecimal price) { this.price = price; }
 }
