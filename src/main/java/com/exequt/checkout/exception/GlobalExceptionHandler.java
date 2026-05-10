@@ -33,9 +33,6 @@ public class GlobalExceptionHandler {
     }
 
     private Map<String, Object> errorBody(String message) {
-        return Map.of(
-            "error", message,
-            "timestamp", Instant.now().toString()
-        );
+        return Map.of("error", message, "timestamp", Instant.now().toString());
     }
 }

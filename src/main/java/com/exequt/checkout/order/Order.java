@@ -35,9 +35,8 @@ public class Order {
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
-    private Instant createdAt;
+    private Instant createdAt = Instant.now();
 
-    @Column(nullable = false)
     private Instant updatedAt;
 
     // Used for optimistic locking
@@ -57,6 +56,7 @@ public class Order {
         order.cartId = cartId;
         order.totalAmount = totalAmount;
         order.status = OrderStatus.CREATED;
+        order.updatedAt = Instant.now();
         return order;
     }
 
