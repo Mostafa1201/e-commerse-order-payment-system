@@ -6,9 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/payments")
 public class PaymentController {
 
     private final PaymentService paymentService;
@@ -17,12 +19,12 @@ public class PaymentController {
         this.paymentService = paymentService;
     }
 
-    @PostMapping("/payments/{orderId}/start")
+    @PostMapping("/{orderId}/start")
     public ResponseEntity<PaymentDtos.PaymentResponse> startPayment(@PathVariable UUID orderId) {
         return ResponseEntity.ok(paymentService.startPayment(orderId));
     }
 
-    @PostMapping("/payments/webhook")
+    @PostMapping("/webhook")
     public ResponseEntity<PaymentDtos.PaymentResponse> webhook(
             @Valid @RequestBody PaymentDtos.WebhookPayload payload) {
         return ResponseEntity.ok(paymentService.handleWebhook(payload));

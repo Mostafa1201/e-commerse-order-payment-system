@@ -2,6 +2,7 @@ package com.exequt.checkout.payment;
 
 import com.exequt.checkout.exception.ConflictException;
 import com.exequt.checkout.exception.NotFoundException;
+import com.exequt.checkout.mock.MockProviderService;
 import com.exequt.checkout.order.Order;
 import com.exequt.checkout.order.OrderRepository;
 import com.exequt.checkout.payment.PaymentDtos.WebhookResult;
@@ -19,11 +20,14 @@ public class PaymentService {
     private static final Logger log = LoggerFactory.getLogger(PaymentService.class);
     private final OrderRepository orderRepository;
     private final PaymentAttemptRepository paymentAttemptRepository;
+    private final PaymentProviderService paymentProviderService;
 
     public PaymentService(OrderRepository orderRepository,
-            PaymentAttemptRepository paymentAttemptRepository) {
+            PaymentAttemptRepository paymentAttemptRepository,
+            PaymentProviderService paymentProviderService) {
         this.orderRepository = orderRepository;
         this.paymentAttemptRepository = paymentAttemptRepository;
+        this.paymentProviderService = paymentProviderService;
     }
 
     private Order findOrderOrThrow(UUID orderId) {
@@ -35,18 +39,21 @@ public class PaymentService {
     public PaymentDtos.PaymentResponse startPayment(UUID orderId) {
         Order order = findOrderOrThrow(orderId);
         boolean activePaymentExists = paymentAttemptRepository.existsByOrderIdAndStatusIn(orderId,
-                List.of(PaymentAttemptStatus.CONFIRMED, PaymentAttemptStatus.FAILED));
+                List.of(PaymentAttemptStatus.PENDING, PaymentAttemptStatus.CONFIRMED));
         if (activePaymentExists) {
             throw new ConflictException("An active payment already exists for order: " + orderId);
         }
         order.startPayment();
         orderRepository.save(order);
 
-        String externalId = "ext-" + UUID.randomUUID();
-        PaymentAttempt paymentAttempt = PaymentAttempt.create(orderId, externalId);
+        PaymentInitiationResponse providerResponse = paymentProviderService.initiatePayment(
+                order.getTotalAmount());
+        PaymentAttempt paymentAttempt = PaymentAttempt.create(orderId,
+                providerResponse.getExternalPaymentId());
         PaymentAttempt saved = paymentAttemptRepository.save(paymentAttempt);
 
-        log.info("Payment started. Order={} ExternalId={}", orderId, externalId);
+        log.info("Payment started. Order={} ExternalId={}", orderId,
+                providerResponse.getExternalPaymentId());
         return PaymentDtos.PaymentResponse.from(saved, order.getStatus().name());
     }
 

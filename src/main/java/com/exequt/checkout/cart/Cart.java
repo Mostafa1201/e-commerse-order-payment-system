@@ -38,11 +38,8 @@ public class Cart {
     private List<CartItem> items = new ArrayList<>();
 
     public UUID getId() { return id; }
-
     public CartStatus getStatus() { return status; }
-
     public Instant getCreatedAt() { return createdAt; }
-
     public List<CartItem> getItems() { return items; }
 
     public void addItem(String productId, int quantity, BigDecimal price) {

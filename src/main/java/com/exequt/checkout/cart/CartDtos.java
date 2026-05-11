@@ -20,13 +20,9 @@ public class CartDtos {
         private BigDecimal totalPrice;
 
         public UUID getId() { return id; }
-
         public String getProductId() { return productId; }
-
         public int getQuantity() { return quantity; }
-
         public BigDecimal getPrice() { return price; }
-
         public BigDecimal getTotalPrice() { return totalPrice; }
 
         public static CartItemResponse from(CartItem item) {
@@ -48,11 +44,8 @@ public class CartDtos {
         private BigDecimal total;
 
         public UUID getId() { return id; }
-
         public String getStatus() { return status; }
-
         public List<CartItemResponse> getItems() { return items; }
-
         public BigDecimal getTotal() { return total; }
 
         public static CartResponse from(Cart cart) {
@@ -80,15 +73,11 @@ public class CartDtos {
         private BigDecimal price;
 
         public String getProductId() { return productId; }
-
         public int getQuantity() { return quantity; }
-
         public BigDecimal getPrice() { return price; }
 
         public void setProductId(String productId) { this.productId = productId; }
-
         public void setQuantity(int quantity) { this.quantity = quantity; }
-
         public void setPrice(BigDecimal price) { this.price = price; }
     }
 }
