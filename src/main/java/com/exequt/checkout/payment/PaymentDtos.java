@@ -59,6 +59,21 @@ public class PaymentDtos {
         public void setResult(WebhookResult result) { this.result = result; }
     }
 
+    public static class TriggerRequest {
+
+        @NotBlank
+        private String externalPaymentId;
+
+        @NotNull
+        private WebhookResult result;
+
+        public String getExternalPaymentId() { return externalPaymentId; }
+        public WebhookResult getResult() { return result; }
+        public void setExternalPaymentId(
+                String externalPaymentId) { this.externalPaymentId = externalPaymentId; }
+        public void setResult(WebhookResult result) { this.result = result; }
+    }
+
     public enum WebhookResult {
         CONFIRMED,
         FAILED
